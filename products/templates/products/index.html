@@ -5,7 +5,7 @@
 <ul>
     {% if request.user.is_authenticated %}
         <li>
-            {{ request.user }}님 환영 합니다 
+            <a href="{% url "accounts:update" %}">{{ request.user }}</a>님 환영 합니다 
             <form action="{% url 'accounts:logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit">로그아웃</button>
