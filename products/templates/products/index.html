@@ -2,4 +2,22 @@
 
 {% block content %}
 <h1>Home</h1>
+<ul>
+    {% if request.user.is_authenticated %}
+        <li>
+            {{ request.user }}님 환영 합니다 
+            <form action="{% url 'accounts:logout' %}" method="post">
+                <button type="submit">로그아웃</button>
+            </form>
+        </li>
+    {% else %}
+        <li>
+            <a href="{% url 'accounts:login' %}">
+                <button>로그인</button>
+            </a>
+        </li>
+    {% endif %}
+    
+    
+</ul>
 {% endblock content %}
