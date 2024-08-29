@@ -1,0 +1,15 @@
+/* 슬라이드 */
+.mySwiper {
+    width: 100%;
+    height: 400px;
+}
+.mySwiper .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+/* 회원가입, 수정, 삭제, 로그인 */
+.my-forms input, .my-forms button{
+    width: 100%;
+}
