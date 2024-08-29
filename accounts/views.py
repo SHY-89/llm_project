@@ -96,3 +96,11 @@ def update_password(request):
         "form": form
     }
     return render(request, "accounts/update_password.html", context)
+
+
+@require_POST
+def delete(request):
+    if request.user.is_authenticated:
+        request.user.delete()
+        auth_logout(request)
+    return redirect("home")

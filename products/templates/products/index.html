@@ -10,6 +10,10 @@
                 {% csrf_token %}
                 <button type="submit">로그아웃</button>
             </form>
+            <form action="{% url 'accounts:delete' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">회원탈퇴</button>
+            </form>
         </li>
     {% else %}
         <li>
