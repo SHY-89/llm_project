@@ -16,7 +16,14 @@ class MyAuthenticationForm(AuthenticationForm):
 class MyUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = ("username", )
+        fields = ("username", "first_name", "last_name", "email", "phone", )
+        labels = {
+            "username": "아이디",
+            "first_name": "이름",
+            "last_name": "닉네임",
+            "email": "이메일",
+            "phone": "전화번호",
+        }
 
 class MyUserChangeForm(UserChangeForm):
     password = ReadOnlyPasswordHashField(
@@ -25,7 +32,7 @@ class MyUserChangeForm(UserChangeForm):
     )
     class Meta:
         model = get_user_model()
-        fields = ("first_name", "last_name", "email", )
+        fields = ("first_name", "last_name", "email", "phone", )
         exclude = ()
 
     def __init__(self, *args, **kwargs):
