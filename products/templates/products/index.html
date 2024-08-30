@@ -1,5 +1,41 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-<h1>Home</h1>
-{% endblock content %}
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <img class="slide_img" src="/media/images/cat-2.jpg" alt="고양이" />
+      </div>
+      <div class="swiper-slide">
+        <img class="slide_img" src="/media/images/cat-5.jpg" alt="고양이" />
+      </div>
+      <div class="swiper-slide">
+        <img class="slide_img" src="/media/images/cat-7.jpg" alt="고양이" />
+      </div>
+      <div class="swiper-slide">
+        <img class="slide_img" src="/media/images/cat-8.jpg" alt="고양이" />
+      </div>
+      <div class="swiper-slide">
+        <img class="slide_img" src="/media/images/cat-9.jpg" alt="고양이" />
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper('.mySwiper', {
+      loop: true, 
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      },
+      autoplay : {  
+        delay : 3000,   
+        disableOnInteraction : false,  
+      },
+    })
+  </script>
+{% endblock %}
