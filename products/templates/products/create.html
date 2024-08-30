@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="width: 35rem; margin: 0 auto;">
+  <div class="card-body">
+      <h5 class="card-title text-center" style="font-size: 35px;margin-bottom: 45px;">상품등록</h5>
+      <form action="" method="POST" class="my-forms" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="file" multiple name="images"/>
+          <p>
+            <label for="id_hash_tags">해쉬태그:</label>
+            <input type="text" name="hash_tags" maxlength="50" id="id_hash_tags" placeholder=", 를 기준으로 적어주세요">
+          </p>
+          <button type="submit" class="btn btn-success">등록</button>
+      </form>
+  </div>
+</div>
+{% endblock %}
