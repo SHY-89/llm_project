@@ -19,7 +19,7 @@
             {{ product.title }}
             <div class="d-flex position-absolute" style="top: -10px;right: 0;">
               {% if product.owenr.username == request.user.username %}
-                <a href="" class="btn" style="font-size: 25px; color: green">
+                <a href="{% url "products:update" product.pk %}" class="btn" style="font-size: 25px; color: green">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
                 <form action="" method="post">
@@ -47,6 +47,14 @@
             <span>
               작성일 : {{ product.created_at|date:"Y-m-d H:i:s" }}
             </span>
+          </p>
+          <p>
+            {% if product.p_hashtags.all %}
+              해시태그 : 
+              {% for p_hashtag in product.p_hashtags.all %}
+                  #{{ p_hashtag.tag_name }}&nbsp;
+              {% endfor %}
+            {% endif %}
           </p>
           <p class="text-end">
             가격 : {{ product.price | intcomma }}원

@@ -6,10 +6,6 @@ class HashTags(models.Model):
     tag_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now=True)
 
-class ProductImages(models.Model):
-    image = models.ImageField(upload_to="pimages/")
-    created_at = models.DateTimeField(auto_now=True)
-
 
 class Products(models.Model):
     title = models.CharField(max_length=120)
@@ -20,5 +16,10 @@ class Products(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     owenr = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="u_products")
     p_hashtags = models.ManyToManyField(HashTags, related_name="h_products")
-    p_images = models.ManyToManyField(ProductImages, related_name="i_products")
     like_users = models.ManyToManyField(get_user_model(), related_name="like_products")
+
+
+class ProductImages(models.Model):
+    image = models.ImageField(upload_to="pimages/")
+    i_products = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="p_images")
+    created_at = models.DateTimeField(auto_now=True)

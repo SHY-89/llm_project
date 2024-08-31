@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="width: 35rem; margin: 0 auto;">
+  <div class="card-body">
+      <h5 class="card-title text-center" style="font-size: 35px;margin-bottom: 45px;">상품수정</h5>
+      <form method="post" class="delete_form">
+        {% csrf_token %}
+      </form>
+      <form action="{% url "products:update" product.pk %}" method="POST" class="my-forms" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <p style="margin-top: 20px;">
+            <input type="file" multiple name="images"/>
+            <div>
+              {% for file in files %}
+                  <p>
+                    {{ file.image }}
+                    <a class="btn btn-danget" onclick="javascript:delete_image('{{ file.pk }}')">
+                      <i class="fa-regular fa-trash-can"></i>
+                    </a>
+                  </p>
+              {% endfor %}
+            </div>
+          </p>
+          <p style="margin-top: 20px;">
+            <label for="id_hash_tags">해쉬태그:</label>
+            <input type="text" name="hash_tags" maxlength="50" id="id_hash_tags" value="{{ hashtag }}">
+            <span class="help_text">
+              기존에 입력한 해시태그를 지우시려면 기존 내용을 입력하시면 해당 해시태그를 삭제 처리 됩니다.
+            </span>
+          </p>
+          <button type="submit" class="btn btn-success" style="width: auto;">수정</button>
+          <a class="btn btn-danger ms-3" href="{% url "products:detail" product.pk %}">취소</a>
+      </form>
+  </div>
+</div>
+<script>
+  function delete_image(pk){
+    $('.delete_form').attr('action','/products/delete_imag/'+pk+'/');
+    $('.delete_form').submit()
+  }
+</script>
+{% endblock %}
