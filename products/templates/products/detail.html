@@ -29,7 +29,7 @@
                   </button>
                 </form>
               {% else %}
-                <form action="" method="post">
+                <form action="{% url "products:like_product" product.pk %}" method="post">
                   {% csrf_token %}
                   {% if request.user in product.like_users.all %}
                     <button type="submit" class="btn" style="font-size: 25px; color: red"><i class="fa-solid fa-heart"></i></button>
@@ -74,6 +74,7 @@
   </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
   const swiper = new Swiper('.myProductSwiper', {
     loop: true, 
@@ -91,5 +92,17 @@
     },
     slidesPerView: 'auto',
   })
+</script>
+<script>
+  $(function(){
+    $.ajax({
+        url : "{% url 'products:update_view' product.pk %}",
+        type : 'POST',
+        data : {csrfmiddlewaretoken: "{{ csrf_token }}"},
+        success : function(data, jqXHR, textStatus) {
+            console.log(data)
+        }
+    });
+  });
 </script>
 {% endblock %}

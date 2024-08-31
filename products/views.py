@@ -3,6 +3,7 @@ from django.views.decorators.http import (
     require_http_methods, 
     require_POST,
 )
+from django.http import JsonResponse
 import re
 from .forms import ProductsForm
 from .models import ProductImages, HashTags, Products
@@ -108,3 +109,24 @@ def delete(request, product_pk):
     else:
         Product.delete()
     return redirect("home")
+
+
+@require_POST
+def update_view(request, product_pk):
+    Product = get_object_or_404(Products, pk=product_pk)
+    if request.user.is_authenticated:
+        Product.views += 1
+        Product.save()
+    return JsonResponse({'status': '200'})
+
+
+@require_POST
+def like_product(request, product_pk):
+    Product = get_object_or_404(Products, pk=product_pk)
+    if request.user.is_authenticated:
+        if Product.like_users.filter(pk=request.user.pk):
+            Product.like_users.remove(request.user)
+        else:
+            Product.like_users.add(request.user)
+        return redirect("products:detail", Product.pk)
+    return redirect("accounts:login")

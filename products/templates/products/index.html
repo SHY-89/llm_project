@@ -48,7 +48,7 @@
                   </div>
                   <div class"btn-sm btn-outline-secondary" style="margin-left: 10px;">
                     <i class="fa-solid fa-heart"></i>
-                    {{ product.like_users|length }}
+                    {{ product.like_users.all|length }}
                   </div>
                 </div>
                 <small class="text-body-secondary">{{ product.created_at|date:"Y.m.d" }}</small>
