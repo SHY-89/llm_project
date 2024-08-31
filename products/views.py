@@ -9,8 +9,11 @@ from .models import ProductImages, HashTags, Products
 
 # Create your views here.
 def home(request):
-    
-    return render(request, "products/index.html")
+    products = Products.objects.all().order_by('-pk')
+    context = {
+        'products': products,
+    }
+    return render(request, "products/index.html", context)
 
 @require_http_methods(['GET', 'POST'])
 def create(request):
