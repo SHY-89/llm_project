@@ -22,7 +22,7 @@
                 <a href="{% url "products:update" product.pk %}" class="btn" style="font-size: 25px; color: green">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
-                <form action="" method="post">
+                <form action="{% url "products:delete" product.pk %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="btn" style="font-size: 25px; color: red">
                     <i class="fa-regular fa-trash-can"></i>

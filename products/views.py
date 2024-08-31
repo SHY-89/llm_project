@@ -94,3 +94,14 @@ def delete_imag(request, image_pk):
     else:
         image.delete()
     return redirect("products:update", image.i_products.pk)
+
+
+
+@require_POST
+def delete(request, product_pk):
+    Product = get_object_or_404(Products, pk=product_pk)
+    if request.user.pk != Product.owenr.pk:
+        return redirect("products:detail", Product.pk)
+    else:
+        Product.delete()
+    return redirect("home")
