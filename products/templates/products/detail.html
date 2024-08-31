@@ -1,10 +1,87 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block content %}
-<div class="card" style="width: 35rem; margin: 0 auto;">
+<div class="card" style="width: 65rem; margin: 0 auto;">
   <div class="card-body">
-      <h5 class="card-title text-center" style="font-size: 35px;margin-bottom: 45px;">상품 상세</h5>
-      {{ product }}
+    <div class="d-flex">
+      <div class="row">
+        <div class="swiper myProductSwiper col-6" style="height: 300px;">
+          <div class="swiper-wrapper">
+            {% for p_image in product.p_images.all %}
+              <div class="swiper-slide">
+                <img class="slide_img" src="{{ p_image.image.url }}" alt="{{ p_image.image }}" style="width: 100%;height: 100%;object-fit: fill;" />
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-6 position-relative">
+          <h3 class="text-center position-relative">
+            {{ product.title }}
+            <div class="d-flex position-absolute" style="top: -10px;right: 0;">
+              {% if product.owenr.username == request.user.username %}
+                <a href="" class="btn" style="font-size: 25px; color: green">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn" style="font-size: 25px; color: red">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </form>
+              {% else %}
+                <form action="" method="post">
+                  {% csrf_token %}
+                  {% if request.user in product.like_users.all %}
+                    <button type="submit" class="btn" style="font-size: 25px; color: red"><i class="fa-solid fa-heart"></i></button>
+                  {% else %}
+                    <button type="submit" class="btn" style="font-size: 25px; color: red"><i class="fa-regular fa-heart"></i></button>
+                  {% endif %}
+                </form>
+              {% endif %}
+            </div>
+          </h3>
+          <p class="text-end">
+            <span style="float:left;">
+              작성자 : {{ product.owenr.username }}
+            </span>
+            <span>
+              작성일 : {{ product.created_at|date:"Y-m-d H:i:s" }}
+            </span>
+          </p>
+          <p class="text-end">
+            가격 : {{ product.price | intcomma }}원
+          </p>
+          <div class="position-absolute bottom-0 end-0 p-2">
+            장바구니 구현 예정
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+<div class="card" style="width: 65rem; margin: 20px auto;">
+  <div class="card-body">
+    <h3 class="text-center">상품상세</h3>
+      {{ product.content|linebreaksbr }}
+  </div>
+</div>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper('.myProductSwiper', {
+    loop: true, 
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev'
+    },
+    autoplay : {  
+      delay : 3000,   
+      disableOnInteraction : false,  
+    },
+    slidesPerView: 'auto',
+  })
+</script>
 {% endblock %}
