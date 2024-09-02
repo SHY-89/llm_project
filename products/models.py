@@ -23,3 +23,11 @@ class ProductImages(models.Model):
     image = models.ImageField(upload_to="pimages/")
     i_products = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="p_images")
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Cart(models.Model):
+    product = models.ManyToManyField(Products, related_name="p_carts")
+    user = models.ManyToManyField(get_user_model(), related_name="u_carts")
+    cnt = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
