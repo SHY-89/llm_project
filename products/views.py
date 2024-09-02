@@ -142,30 +142,40 @@ def cart_list(request):
     return render(request, "products/cart_list.html", context)
 
 @login_required
-@require_http_methods(['POST', 'PUT', 'DELETE'])
-def cart(request, product_pk):
+@require_POST
+def cart_create(request, product_pk):
     product = get_object_or_404(Products, pk = product_pk)
-    if product is not None:
-        if request.method == "POST":
-            cnt = 1 or request.POST.get("cnt")
-            Cart.objects.create(product=product, user=request.user, cnt=cnt)
-        elif request.method == "PUT":
-            cart_id = request.PUT.get("cart_id")
-            cnt = request.PUT.get("cnt")
-            cart = get_object_or_404(Cart, pk = cart_id)
-            if cart.user.username == request.user.username:
-                cart.cnt = cnt
-                cart.save()
-            else:
-                return JsonResponse({'status': '400'}) 
+    cnt = int(request.POST.get("cnt"))
+    if len(Cart.objects.filter(product=product, user=request.user)) == 0:
+        Cart.objects.create(product=product, user=request.user, cnt=cnt)
+    else:
+        cart = get_object_or_404(Cart, product=product, user=request.user)
+        cart.cnt += cnt
+        cart.save()
+    return JsonResponse({'status': '200'})
 
-        elif request.method == "DELETE":
-            cart_id = request.PUT.get("cart_id")
-            cart = get_object_or_404(Cart, pk = cart_id)
-            if cart.user.username == request.user.username:
-                cart.delete()
-            else:
-                return JsonResponse({'status': '400'})
-        return JsonResponse({'status': '200'})
+    
+@login_required
+@require_POST
+def cart_update(request):
+    cart_id = request.POST.get("cart_id")
+    cnt = int(request.POST.get("cnt"))
+    cart = get_object_or_404(Cart, pk = cart_id)
+    if cart.user.username == request.user.username:
+        cart.cnt = cnt
+        cart.save()
+    else:
+        return JsonResponse({'status': '400'}) 
+    return JsonResponse({'status': '200'})
+
+
+@login_required
+@require_POST
+def cart_delete(request):
+    cart_id = request.POST.get("cart_id")
+    cart = get_object_or_404(Cart, pk = cart_id)
+    if cart.user.username == request.user.username:
+        cart.delete()
     else:
         return JsonResponse({'status': '400'})
+    return JsonResponse({'status': '200'})

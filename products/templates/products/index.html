@@ -2,7 +2,16 @@
 {% load humanize %}
 {% block content %}
   <div class="mt-3 mb-5 text-end">
-    <a class="btn btn-dark" href="{% url "products:create" %}">상품등록</a>
+    <div class="hovertext hovertext1">
+      <a class="btn btn-dark" href="{% url "products:create" %}" style="border: 0;background: #fff;color: #35619D;font-size: 30px;">
+        <i class="fa-solid fa-square-plus"></i>
+      </a>
+    </div>
+    <div class="hovertext hovertext2">
+      <a class="btn btn-dark" href="{% url "products:cart_list" %}" style="border: 0;background: #fff;color: #35619D;font-size: 30px;">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+    </div>
   </div>
   <div class="swiper mySwiper">
     <div class="swiper-wrapper">
