@@ -26,8 +26,8 @@ class ProductImages(models.Model):
 
 
 class Cart(models.Model):
-    product = models.ManyToManyField(Products, related_name="p_carts")
-    user = models.ManyToManyField(get_user_model(), related_name="u_carts")
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="p_carts")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="u_carts")
     cnt = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

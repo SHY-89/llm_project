@@ -3,10 +3,11 @@ from django.views.decorators.http import (
     require_http_methods, 
     require_POST,
 )
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import re
 from .forms import ProductsForm
-from .models import ProductImages, HashTags, Products
+from .models import ProductImages, HashTags, Products, Cart
 
 # Create your views here.
 def home(request):
@@ -130,3 +131,41 @@ def like_product(request, product_pk):
             Product.like_users.add(request.user)
         return redirect("products:detail", Product.pk)
     return redirect("accounts:login")
+
+
+@login_required
+def cart_list(request):
+    carts = Cart.objects.filter(user=request.user)
+    context = {
+        "carts": carts
+    }
+    return render(request, "products/cart_list.html", context)
+
+@login_required
+@require_http_methods(['POST', 'PUT', 'DELETE'])
+def cart(request, product_pk):
+    product = get_object_or_404(Products, pk = product_pk)
+    if product is not None:
+        if request.method == "POST":
+            cnt = 1 or request.POST.get("cnt")
+            Cart.objects.create(product=product, user=request.user, cnt=cnt)
+        elif request.method == "PUT":
+            cart_id = request.PUT.get("cart_id")
+            cnt = request.PUT.get("cnt")
+            cart = get_object_or_404(Cart, pk = cart_id)
+            if cart.user.username == request.user.username:
+                cart.cnt = cnt
+                cart.save()
+            else:
+                return JsonResponse({'status': '400'}) 
+
+        elif request.method == "DELETE":
+            cart_id = request.PUT.get("cart_id")
+            cart = get_object_or_404(Cart, pk = cart_id)
+            if cart.user.username == request.user.username:
+                cart.delete()
+            else:
+                return JsonResponse({'status': '400'})
+        return JsonResponse({'status': '200'})
+    else:
+        return JsonResponse({'status': '400'})

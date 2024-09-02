@@ -60,7 +60,9 @@
             가격 : {{ product.price | intcomma }}원
           </p>
           <div class="position-absolute bottom-0 end-0 p-2">
-            장바구니 구현 예정
+            <label for="add_cart">수량</label>
+            <input type="number" name="add_cart" id="add_cart" class="text-end" value="1">
+            <button class="add_cart btn btn-primary">담기</button>
           </div>
         </div>
       </div>
@@ -103,6 +105,23 @@
             console.log(data)
         }
     });
+    $('.add_cart').click(function(){
+      if (confirm("카드에 등록하시겠습니까?")){
+        $.ajax({
+          url : "{% url 'products:cart' product.pk %}",
+          type : 'POST',
+          data : {csrfmiddlewaretoken: "{{ csrf_token }}", cnt: $('#cart_cnt').val()},
+          success : function(data, jqXHR, textStatus) {
+            if (data.status == '200'){
+              alert('정상적으로 장바구니에 담았습니다.')
+            }else{
+              alert('장바구니에 담는 중 오류가 발생하였습니다.')
+            }
+          }
+        });
+      }
+    });
   });
+  
 </script>
 {% endblock %}
