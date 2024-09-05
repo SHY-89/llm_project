@@ -9,6 +9,7 @@ import re
 from .forms import ProductsForm
 from .models import ProductImages, HashTags, Products, Cart
 
+
 # Create your views here.
 def home(request):
     products = Products.objects.all().order_by('-pk')
