@@ -8,6 +8,7 @@ from django.http import JsonResponse
 import re
 from .forms import ProductsForm
 from .models import ProductImages, HashTags, Products, Cart
+from .bots import product_help_bot
 
 
 # Create your views here.
@@ -38,8 +39,8 @@ def create(request):
                 hashtag = get_object_or_404(HashTags, tag_name=hash_tag)
                 products.p_hashtags.add(hashtag.pk)
             return redirect("products:detail", products.pk)
-    else:
-        form = ProductsForm()
+    
+    form = ProductsForm()
     context ={
         'form': form,
     }
@@ -77,12 +78,12 @@ def update(request, product_pk):
                 else:
                     product.p_hashtags.add(hashtag.pk)
             return redirect("products:detail", product.pk)
-    else:
-        form = ProductsForm(instance=product)
-        hashtag = ''
-        for tag in product.p_hashtags.all():
-            hashtag += tag.tag_name + ', '
-        files = product.p_images.all()
+
+    form = ProductsForm(instance=product)
+    hashtag = ''
+    for tag in product.p_hashtags.all():
+        hashtag += tag.tag_name + ', '
+    files = product.p_images.all()
     context = {
         "form": form,
         "product": product,
@@ -97,8 +98,8 @@ def delete_imag(request, image_pk):
     image = get_object_or_404(ProductImages, pk=image_pk)
     if request.user.pk != image.i_products.owenr.pk:
         return redirect("products:detail", image.i_products.pk)
-    else:
-        image.delete()
+    
+    image.delete()
     return redirect("products:update", image.i_products.pk)
 
 
@@ -108,8 +109,8 @@ def delete(request, product_pk):
     Product = get_object_or_404(Products, pk=product_pk)
     if request.user.pk != Product.owenr.pk:
         return redirect("products:detail", Product.pk)
-    else:
-        Product.delete()
+    
+    Product.delete()
     return redirect("home")
 
 
@@ -165,9 +166,8 @@ def cart_update(request):
     if cart.user.username == request.user.username:
         cart.cnt = cnt
         cart.save()
-    else:
-        return JsonResponse({'status': '400'}) 
-    return JsonResponse({'status': '200'})
+        return JsonResponse({'status': '200'})
+    return JsonResponse({'status': '400'}) 
 
 
 @login_required
@@ -177,6 +177,13 @@ def cart_delete(request):
     cart = get_object_or_404(Cart, pk = cart_id)
     if cart.user.username == request.user.username:
         cart.delete()
-    else:
-        return JsonResponse({'status': '400'})
-    return JsonResponse({'status': '200'})
+        return JsonResponse({'status': '200'})
+    return JsonResponse({'status': '400'})
+
+
+@login_required
+@require_POST
+def help_bot(request):
+    message = request.POST.get('message')
+    answer = product_help_bot(message)
+    return JsonResponse({'status': '200', 'answer': answer})
