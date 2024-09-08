@@ -29,3 +29,25 @@
 
 ## ERD
 ![ERD](/docs/image/LLMProject.drawio.png)
+
+
+## 개발 환경
+    windows 10
+    VScode
+    sqlite3
+    Python 3.10.14
+    Django 4.2
+    django-extensions 3.2.3
+    django-mathfilters 1.0.0
+    pillow 10.4.0
+
+
+## API
+    | **API 이름**     | **설명**                | **HTTP 메서드** | **엔드포인트**         |
+    |------------------|-------------------------|-----------------|------------------------|
+    | 로그인           | 사용자 로그인 처리      | POST            | /api/login             |
+    | 회원 가입        | 새로운 사용자 등록      | POST            | /api/register          |
+    | 제품 조회        | 모든 제품 목록 반환     | GET             | /api/products          |
+    | 장바구니 추가    | 장바구니에 제품 추가    | POST            | /api/cart/add          |
+    | 장바구니 조회    | 장바구니 내 제품 목록   | GET             | /api/cart              |
+    | 회원 정보 수정   | 사용자 정보 업데이트    | PUT             | /api/user/update       |
