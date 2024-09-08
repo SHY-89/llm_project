@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load mathfilters %}
+{% block content %}
+<div class="card" style="width: 65rem; margin: 0 auto;">
+  <div class="card-body">
+    <h5 class="card-title text-center" style="font-size: 35px;">장바구니</h5>
+    <hr>
+    <table class="table table-striped text-center">
+      <colgroup>
+        <col width="*" />
+        <col width="15%" />
+        <col width="10%" />
+        <col width="15%" />
+        <col width="15%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>상품명</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>총 금액</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for cart in carts %}
+        <tr>
+          <td class="text-start align-middle" scope="row">
+            <a href="{% url "products:detail" cart.product.pk %}" class="btn">
+              {{ cart.product.title }}
+            </a>
+          </td>
+          <td class="text-center align-middle">
+            {{ cart.product.price | intcomma }}원
+          </td>
+          <td>
+            <input class="form-control text-end" type="number" name="{{ cart.pk }}_cnt" id="{{ cart.pk }}_cnt" value={{ cart.cnt }}>
+          </td>
+          <td class="text-end align-middle">
+            {{  cart.product.price |mul:cart.cnt | intcomma }}원
+          </td>
+          <td>
+            <button class="btn btn-success" onclick="javascript:cart_save('{{ cart.pk }}')">
+              <i class="fa-solid fa-floppy-disk"></i>
+            </button>
+            <button class="btn btn-danger" onclick="javascript:cart_delete('{{ cart.pk }}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+  function cart_save(c_id){
+    if (confirm("저장 하시겠습니까?")){
+      $.ajax({
+        url : "{% url 'products:cart_update' %}",
+        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+        type : 'POST',
+        data : {csrfmiddlewaretoken: "{{ csrf_token }}", cnt: $('#'+c_id+'_cnt').val(), cart_id: c_id},
+        success : function(data, jqXHR, textStatus) {
+          if (data.status == '200'){
+            alert('정상적으로 수정 되었습니다.');
+            location.reload();
+          }else{
+            alert('수정 중 오류가 발생하였습니다.')
+          }
+        }
+      });
+    }
+  }
+
+  function cart_delete(c_id){
+    if (confirm("저장 하시겠습니까?")){
+      $.ajax({
+        url : "{% url 'products:cart_delete' %}",
+        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+        type : 'POST',
+        data : {csrfmiddlewaretoken: "{{ csrf_token }}", cart_id: c_id },
+        success : function(data, jqXHR, textStatus) {
+          if (data.status == '200'){
+            alert('정상적으로 삭제 되었습니다.');
+            location.reload();
+          }else{
+            alert('삭제 중 오류가 발생하였습니다.')
+          }
+        }
+      });
+    }
+  }
+</script>
+{% endblock %}
