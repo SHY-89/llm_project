@@ -38,6 +38,7 @@
       <textarea placeholder="구체적으로 입력해주세요..." spellcheck="false" required></textarea>
       <span id="send-btn" class="material-symbols-rounded">send</span>
     </div>
+    <input type="hidden" class="chat_history">
   </div>
   <script>
     const chatbotToggler = document.querySelector('.chatbot-toggler')
@@ -65,25 +66,22 @@
       // Define the properties and message for the API request
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', "X-CSRFToken": '{{ csrf_token }}' },
         body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: userMessage }]
-            }
-          ]
+          text: userMessage,
+          history: $('.chat_history').val(),
         })
       }
     
       // Send POST request to API, get response and set the reponse as paragraph text
       try {
-        const response = await fetch(API_URL, requestOptions)
+        const response = await fetch('{% url "products:aihelp" %}', requestOptions)
         const data = await response.json()
         if (!response.ok) throw new Error(data.error.message)
     
         // Get the API response text and update the message element
-        messageElement.textContent = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '$1')
+        messageElement.textContent = data.answer.replace(/\*\*(.*?)\*\*/g, '$1')
+        $('.chat_history').val(data.answer.replace(/\*\*(.*?)\*\*/g, '$1'))
       } catch (error) {
         // Handle error
         messageElement.classList.add('error')
@@ -110,7 +108,7 @@
         const incomingChatLi = createChatLi('답변 생성 중...', 'incoming')
         chatbox.appendChild(incomingChatLi)
         chatbox.scrollTo(0, chatbox.scrollHeight)
-        /*generateResponse(incomingChatLi)*/
+        generateResponse(incomingChatLi)
       }, 600)
     }
     

@@ -184,6 +184,5 @@ def cart_delete(request):
 @login_required
 @require_POST
 def help_bot(request):
-    message = request.POST.get('message')
-    answer = product_help_bot(message)
-    return JsonResponse({'status': '200', 'answer': answer})
+    answer = product_help_bot(request)
+    return JsonResponse({'ok': True, 'answer': answer.content})
